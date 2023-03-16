@@ -1,0 +1,8 @@
+flask
+python-dotenv
+gunicorn
+flask_wtf
+wtforms
+transformers
+tensorflow
+sentencepiece
