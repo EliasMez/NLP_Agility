@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block body %}
+
+<form action="" method="post" class="connexion">
+
+
+    {%if error%} 
+    <p>{{error}}</p>
+    {%endif%}
+
+    <fieldset>
+        {{form.text.label}}
+        {{form.text(required='required')}}
+    </fieldset>
+    
+    <input class="action_button" type="submit" value="Envoyer">
+    {{form.csrf_token}}
+    {% if summary %}
+    <p>{{ summary }}</p>
+    {% endif %}
+
+</form>
+
+{% endblock %}
