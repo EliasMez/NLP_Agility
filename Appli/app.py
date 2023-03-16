@@ -43,9 +43,9 @@ def huggingface():
     return render_template("huggingface.html",form=form,erreur=erreur)
 
 
-###########################
-##    gunicorn app:app   ##
-###########################
+#########################################
+##    gunicorn --timeout 600 app:app   ##
+#########################################
 
 if __name__ == '__main__':
     app.run()
