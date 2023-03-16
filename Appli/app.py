@@ -61,6 +61,13 @@ def azure():
     return render_template("formulaire.html",form=form,erreur=erreur)
 
 
+######################################
+##         error 404
+####################################
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 #########################################
 ##    gunicorn --timeout 600 app:app   ##
 #########################################
