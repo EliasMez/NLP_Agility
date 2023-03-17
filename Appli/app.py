@@ -1,8 +1,8 @@
 import os
 from flask import Flask, render_template, redirect, url_for, request, session
 from dotenv import load_dotenv
-from transformers import pipeline
-from transformers import PegasusTokenizer, PegasusForConditionalGeneration, TFPegasusForConditionalGeneration
+
+import requests
 
 from formulaires import SummaryText
 from functions import *
@@ -31,23 +31,9 @@ def huggingface():
     erreur = None
     if form.validate_on_submit():
         
-        # Let's load the model and the tokenizer 
-        model_name = "human-centered-summarization/financial-summarization-pegasus"
-        summarizer = pipeline("summarization",model=model_name)                                                                   
-        text_to_summarize = form.data["text"]
-       
-        sentences = text_to_summarize.split(".")
-
-        # Group the sentences into clusters of 3
-        clusters = [sentences[i:i+3] for i in range(0, len(sentences), 3)]
-
-        # Generate a summary for each cluster
-        cluster_summaries = [summarizer(' '.join(cluster))[0]['summary_text'] for cluster in clusters]
-
-        # Combine the cluster summaries into a final summary
-        final_summary = ' '.join(cluster_summaries)
-
-        summary = final_summary
+        data = {"input_text":form.data["text"]}
+        response = requests.post("http://0.0.0.0/summarize", json=data)
+        summary =  response.json()["summary"]
         
         return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
 
