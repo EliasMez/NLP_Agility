@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from transformers import pipeline
 
 from formulaires import SummaryText
+from functions import *
 
 load_dotenv()
 
@@ -19,7 +20,11 @@ def accueil():
     return render_template("index.html")
 
 
-@app.route('/modeles/hugginf_face',methods=['GET','POST'])
+#################################
+##      Modeles               ##
+################################
+
+@app.route('/modeles/hugging_face',methods=['GET','POST'])
 def huggingface():
     form = SummaryText()
     erreur = None
@@ -37,15 +42,35 @@ def huggingface():
         # Print the summary
         print(summary[0]['summary_text'])
 
-        return render_template("huggingface.html",form=form,erreur=erreur,summary = summary)
+        return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
         # return redirect(url_for("accueil"))
 
-    return render_template("huggingface.html",form=form,erreur=erreur)
+    return render_template("formulaire.html",form=form,erreur=erreur)
+
+@app.route('/modeles/azure',methods=['GET','POST'])
+def azure():
+    form = SummaryText()
+    erreur = None
+    if form.validate_on_submit():
+        client = authenticate_client()
+        summary=sample_extractive_summarization(client,[form.data["text"]])
+
+        return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
+        
+
+    return render_template("formulaire.html",form=form,erreur=erreur)
 
 
-###########################
-##    gunicorn app:app   ##
-###########################
+######################################
+##         error 404
+####################################
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+#########################################
+##    gunicorn --timeout 600 app:app   ##
+#########################################
 
 if __name__ == '__main__':
     app.run()
