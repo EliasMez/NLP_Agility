@@ -1,0 +1,7 @@
+flask
+python-dotenv
+gunicorn
+flask_wtf
+wtforms
+azure-ai-textanalytics==5.3.0b1
+azure-ai-language-conversations==1.1.0b3
