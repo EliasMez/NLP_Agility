@@ -1,0 +1,6 @@
+uvicorn
+fastapi
+tensorflow
+sentencepiece
+transformers
+pydantic
