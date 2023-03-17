@@ -2,18 +2,27 @@ import os
 from flask import Flask, render_template, redirect, url_for, request, session
 from dotenv import load_dotenv
 from transformers import pipeline
-
-from formulaires import SummaryText
+from werkzeug.utils import secure_filename
+from formulaires import SummaryText, PdfForm
 from functions import *
+from PDF_extract import pdf_extract
 
 load_dotenv()
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY']=os.getenv('SECRET_KEY')
 
+ALLOWED_EXTENSIONS = {'pdf'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 ##################################
 ##            Acceuil           ## 
 ##################################
+
 
 @app.route("/")
 def accueil():
@@ -28,24 +37,34 @@ def accueil():
 def huggingface():
     form = SummaryText()
     erreur = None
-    if form.validate_on_submit():
-        
-
+    if request.method == 'POST':
         summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
-        # Define the input text
-        input_text = form.data["text"]
+        if form.validate_on_submit(): 
+            # Define the input text
+            input_text = form.data["text"]
 
-        # Generate a summary of the input text
-        summary = summarizer(input_text, max_length=81, min_length=30, do_sample=False)
+            # Generate a summary of the input text
+            summary = summarizer(input_text, max_length=81, min_length=30, do_sample=False)
+            return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
 
-        # Print the summary
-        print(summary[0]['summary_text'])
-
-        return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
-        # return redirect(url_for("accueil"))
+        form_pdf = PdfForm()
+        if form_pdf.validate_on_submit():
+            # Récupérer le fichier PDF
+            pdf_file = request.files['pdf_file']
+            # Define the input text
+            input_pdf = form.data["pdf"]
+            if allowed_file(input_pdf):
+                input_text = pdf_extract(pdf_file)
+                # Generate a summary of the input text
+                summary = summarizer(input_text, max_length=81, min_length=30, do_sample=False)
+                return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
+            else :
+                return render_template("formulaire.html",form=form,erreur=erreur)
 
     return render_template("formulaire.html",form=form,erreur=erreur)
+
+
 
 @app.route('/modeles/azure',methods=['GET','POST'])
 def azure():

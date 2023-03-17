@@ -3,7 +3,6 @@
 
 <form action="" method="post" class="connexion">
 
-
     {%if error%} 
     <p>{{error}}</p>
     {%endif%}
@@ -19,6 +18,11 @@
     <p>{{ summary }}</p>
     {% endif %}
 
+</form>
+
+<form action="" method="POST" enctype="multipart/form-data">
+    <input type="file" name="pdf_file" accept="application/pdf">
+    <input type="submit" value="Envoyer">
 </form>
 
 {% endblock %}
