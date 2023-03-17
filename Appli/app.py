@@ -32,7 +32,7 @@ def huggingface():
     if form.validate_on_submit():
         
         data = {"input_text":form.data["text"]}
-        response = requests.post("http://0.0.0.0/summarize", json=data)
+        response = requests.post("https://api-nlp-summary.onrender.com/summarize", json=data)
         summary =  response.json()["summary"]
         
         return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
