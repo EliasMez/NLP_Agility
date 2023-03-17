@@ -7,7 +7,9 @@ ENV PYTHONUNBUFFERED 1
 COPY . /app
 
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt &&\
+    python load_model.py
+
 
 EXPOSE 80
 
