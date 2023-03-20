@@ -1,4 +1,5 @@
 import os
+import requests
 from dotenv import load_dotenv
 from azure.ai.textanalytics import TextAnalyticsClient
 from azure.core.credentials import AzureKeyCredential
@@ -18,7 +19,7 @@ def authenticate_client():
     return text_analytics_client
 
 
-def sample_extractive_summarization(client,document):
+def sample_extractive_summarization(client,document,result_queue):
     poller = client.begin_analyze_actions(
         document,
         actions=[
@@ -35,4 +36,11 @@ def sample_extractive_summarization(client,document):
             ))
         else :
             summarization = "{}".format(" ".join([sentence.text for sentence in extract_summary_result.sentences]))
-            return summarization
+            result_tuple = ("Azure" ,summarization)
+            result_queue.put(result_tuple)
+
+def summarize_hugging(data,result_queue):
+    response = requests.post("http://0.0.0.0/summarize", json=data)
+    summary_hugging = response.json()["summary"]
+    result_tuple = ("Hugging" ,summary_hugging)
+    result_queue.put(result_tuple)
