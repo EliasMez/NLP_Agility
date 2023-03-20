@@ -29,29 +29,31 @@ def accueil():
 def huggingface():
     form = SummaryText()
     erreur = None
+    title = "Hugging face Model"
     if form.validate_on_submit():
         
         data = {"input_text":form.data["text"]}
-        response = requests.post("https://api-nlp-summary.onrender.com/summarize", json=data)
+        response = requests.post("http://0.0.0.0/summarize", json=data)
         summary =  response.json()["summary"]
         
-        return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
+        return render_template("formulaire.html",form=form,erreur=erreur,summary = summary,title=title)
 
 
-    return render_template("formulaire.html",form=form,erreur=erreur)
+    return render_template("formulaire.html",form=form,erreur=erreur,title=title)
 
 @app.route('/modeles/azure',methods=['GET','POST'])
 def azure():
     form = SummaryText()
     erreur = None
+    title = "Azure Model"
     if form.validate_on_submit():
         client = authenticate_client()
         summary=sample_extractive_summarization(client,[form.data["text"]])
 
-        return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
+        return render_template("formulaire.html",form=form,erreur=erreur,summary = summary,title=title)
         
 
-    return render_template("formulaire.html",form=form,erreur=erreur)
+    return render_template("formulaire.html",form=form,erreur=erreur,title=title)
 
 
 ######################################
