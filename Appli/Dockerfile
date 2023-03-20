@@ -11,4 +11,4 @@ RUN pip install --upgrade pip && \
 
 EXPOSE 80
 
-CMD ["gunicorn","--timeout", "600","-b","0.0.0.0:80", "app:app"]
+CMD ["gunicorn","--timeout","-w","4", "600","-b","0.0.0.0:80", "app:app"]
