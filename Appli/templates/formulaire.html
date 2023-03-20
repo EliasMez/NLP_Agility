@@ -2,7 +2,7 @@
 {% block body %}
 
 
-<form action="" method="post" class="connexion">
+<form action="" method="post" class="summary_form">
 
     <h1>{{title}}</h1>
     {%if error%} 
@@ -16,10 +16,21 @@
     
     <input class="action_button" type="submit" value="Envoyer">
     {{form.csrf_token}}
-    {% if summary %}
-    <p>{{ summary }}</p>
-    {% endif %}
 
+    
 </form>
-
+<section class="resumer">
+    <article>
+        <h2>Résumé avec hugging face</h2>
+        {% if summary_hugging %}
+        <p>{{ summary_hugging }}</p>
+        {% endif %}
+    </article>
+    <article>
+        <h2>Résumé avec azure</h2>
+        {% if summary_azure %}
+        <p>{{ summary_azure }}</p>
+        {% endif %}
+    </article>
+</section>
 {% endblock %}

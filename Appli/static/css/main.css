@@ -320,12 +320,9 @@ body {
 
 .navbar {
   background-color: #fefefe;
-  position: fixed;
   height: 64px;
+  position: relative;
   display: flex;
-  top: 0;
-  left: 0;
-  right: 0;
   flex-flow: row;
   justify-content: space-between;
   align-items: center;
@@ -339,8 +336,18 @@ body {
   width: 50%;
   border-bottom: 1px solid #151515;
 }
+.navbar a {
+  text-decoration: none;
+}
+
+#link {
+  position: absolute;
+  top: 4px;
+  left: 26px;
+}
 
 .logonav h1 {
+  font-size: 36px;
   margin: 0;
   color: #151515;
 }
@@ -374,6 +381,81 @@ body {
   text-decoration: none;
 }
 
+.close {
+  display: none;
+}
+
+@media screen and (max-width: 800px) {
+  nav {
+    display: flex;
+    flex-flow: column;
+    gap: 20px;
+  }
+  .listnav {
+    justify-content: center;
+  }
+  .navbar {
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0;
+    gap: 20px;
+    /* celles du haut et du bas s'inclinent pour former une croix */
+  }
+  .navbar #burger {
+    width: 30px;
+    height: 2px;
+    background: #151515;
+    display: inline-block;
+    position: relative;
+    left: 2px;
+  }
+  .navbar .listnav {
+    display: none;
+  }
+  .navbar #burger::before,
+  .navbar #burger::after {
+    content: "";
+    width: 30px;
+    height: 2px;
+    background: #151515;
+    display: inline-block;
+    position: absolute;
+    transform-origin: center;
+    transition: all 0.3s ease;
+  }
+  .navbar #burger::before {
+    top: -7px;
+  }
+  .navbar #burger::after {
+    top: 7px;
+  }
+  .navbar #burger.open {
+    background: transparent;
+    /* la barre du milieu disparait */
+  }
+  .navbar #burger.open::before {
+    transform: rotate(45deg);
+    top: 0;
+  }
+  .navbar #burger.open::after {
+    transform: rotate(-45deg);
+    top: 0;
+  }
+}
+@media screen and (max-width: 500px) {
+  .logonav h1 {
+    font-size: 24px;
+  }
+}
+@media screen and (max-width: 400px) {
+  .logonav h1 {
+    font-size: 24px;
+  }
+  nav .listnav li {
+    font-size: 20px;
+  }
+}
 button {
   background-color: #6D071A;
   color: #fff;
@@ -417,22 +499,32 @@ button:hover {
   gap: 24px;
 }
 
-.connexion {
-  height: 100vh;
+.summary_form {
   display: flex;
   flex-flow: column;
   justify-content: center;
   align-items: center;
   gap: 16px;
 }
-.connexion fieldset {
+.summary_form fieldset {
   display: flex;
   flex-flow: column;
   gap: 16px;
 }
-.connexion fieldset textarea {
+.summary_form fieldset textarea {
   width: 600px;
   height: 500px;
+}
+
+.resumer {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+.resumer article {
+  width: 50%;
 }
 
 .page404 {
