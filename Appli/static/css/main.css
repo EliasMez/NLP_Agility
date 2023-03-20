@@ -506,27 +506,76 @@ button:hover {
   align-items: center;
   gap: 16px;
 }
+.summary_form h1 {
+  padding: 0 4px;
+  text-align: center;
+}
 .summary_form fieldset {
   display: flex;
   flex-flow: column;
   gap: 16px;
+  width: 75%;
+  border-radius: 12px;
 }
 .summary_form fieldset textarea {
-  width: 600px;
-  height: 500px;
+  height: 400px;
+  padding: 12px 4px 4px 4px;
+  border-radius: 12px;
+  outline: none;
+  resize: none;
+}
+.summary_form .action_button {
+  border-radius: 4px;
+  border: #151515 1px solid;
+  background-color: #6D071A;
+  color: #fefefe;
+  font-size: 24px;
+  padding: 4px;
+  cursor: pointer;
+}
+.summary_form .action_button:hover {
+  border-radius: 4px;
+  border: #6D071A 1px solid;
+  background-color: #fefefe;
+  color: #151515;
+  padding: 4px;
 }
 
 .resumer {
+  margin-top: 24px;
+  margin-bottom: 24px;
   display: flex;
   flex-flow: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  padding: 0 12px;
+}
+.resumer div {
+  display: flex;
+  flex-flow: column;
+  gap: 24px;
+  width: 75%;
+}
+.resumer p {
+  text-align: justify;
 }
 .resumer article {
-  width: 50%;
+  display: flex;
+  flex-flow: column;
+  gap: 12px;
 }
 
+@media screen and (max-width: 500px) {
+  .summary_form h1 {
+    font-size: 24px;
+  }
+  .resumer div {
+    width: 100%;
+  }
+  .resumer p {
+    text-align: left;
+  }
+}
 .page404 {
   display: flex;
   justify-content: center;
