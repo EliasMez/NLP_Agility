@@ -19,18 +19,17 @@
 
     
 </form>
+{% if results %}
 <section class="resumer">
+    <div>
+    {% for result in results  %}
     <article>
-        <h2>Résumé avec hugging face</h2>
-        {% if summary_hugging %}
-        <p>{{ summary_hugging }}</p>
-        {% endif %}
+        <h2>Résumé avec {{result[0]}}</h2>
+        
+        <p>{{ result[1] }}</p>
     </article>
-    <article>
-        <h2>Résumé avec azure</h2>
-        {% if summary_azure %}
-        <p>{{ summary_azure }}</p>
-        {% endif %}
-    </article>
+    {% endfor %}
+</div>
 </section>
+{% endif %}
 {% endblock %}

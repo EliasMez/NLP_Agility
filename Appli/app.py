@@ -51,16 +51,8 @@ def summary():
         while not result_queue.empty():
             result = result_queue.get()
             results.append(result)
-
-        # On affiche les résultats avec leurs arguments correspondants
-        for result in results:
-            model,summary_text = result
-            if model == "Azure":
-                summary_azure = summary_text
-            if model == "Hugging" : 
-                summary_hugging = summary_text
         
-        return render_template("formulaire.html",form=form,erreur=erreur,summary_hugging = summary_hugging,title=title,summary_azure=summary_azure)
+        return render_template("formulaire.html",form=form,erreur=erreur,title=title,results=results)
 
 
     return render_template("formulaire.html",form=form,erreur=erreur,title=title)
