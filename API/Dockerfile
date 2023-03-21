@@ -13,4 +13,4 @@ RUN pip install --upgrade pip && \
 
 EXPOSE 80
 
-CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--workers", "8", "--port", "80", "--timeout-keep-alive", "600" ]
+CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--workers", "4", "--port", "80", "--timeout-keep-alive", "600" ]
