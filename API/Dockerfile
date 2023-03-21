@@ -7,8 +7,10 @@ ENV PYTHONUNBUFFERED 1
 COPY . /app
 
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt &&\
+    python load_model.py
+
 
 EXPOSE 80
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80","--timeout-keep-alive","600"]
+CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--workers", "8", "--port", "80", "--timeout-keep-alive", "600" ]

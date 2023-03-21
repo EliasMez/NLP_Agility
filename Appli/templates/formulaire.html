@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block body %}
 
-<form action="" method="post" class="connexion">
 
+<form action="" method="post" class="summary_form">
+
+    <h1>{{title}}</h1>
     {%if error%} 
     <p>{{error}}</p>
     {%endif%}
@@ -14,10 +16,8 @@
     
     <input class="action_button" type="submit" value="Envoyer">
     {{form.csrf_token}}
-    {% if summary %}
-    <p>{{ summary }}</p>
-    {% endif %}
 
+    
 </form>
 
 <form action="" method="POST" enctype="multipart/form-data">
@@ -25,4 +25,17 @@
     <input type="submit" value="Envoyer">
 </form>
 
+{% if results %}
+<section class="resumer">
+    <div>
+    {% for result in results  %}
+    <article>
+        <h2>Résumé avec {{result[0]}}</h2>
+        
+        <p>{{ result[1] }}</p>
+    </article>
+    {% endfor %}
+</div>
+</section>
+{% endif %}
 {% endblock %}

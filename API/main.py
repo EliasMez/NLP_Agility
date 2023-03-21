@@ -9,7 +9,7 @@ class Request(BaseModel):
     input_text : str
 
 @app.post("/summarize")
-def summarize(input_text: Request):                                                                 
+async def summarize(input_text: Request):                                                                 
     text_to_summarize = input_text.dict()["input_text"]
     
     sentences = text_to_summarize.split(".")

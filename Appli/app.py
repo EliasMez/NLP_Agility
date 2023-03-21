@@ -1,24 +1,19 @@
 import os
+import threading
+import queue
 from flask import Flask, render_template, redirect, url_for, request, session
 from dotenv import load_dotenv
-from werkzeug.utils import secure_filename
+
 import requests
-from transformers import pipeline
-from formulaires import SummaryText, PdfForm
+
+from formulaires import SummaryText
 from functions import *
-from PDF_extract import pdf_extract
 
 load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY']=os.getenv('SECRET_KEY')
-
-ALLOWED_EXTENSIONS = {'pdf'}
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
+client = authenticate_client()
 ##################################
 ##            Acceuil           ## 
 ##################################
@@ -32,68 +27,35 @@ def accueil():
 ##      Modeles               ##
 ################################
 
-
-@app.route('/modeles/hugging_face',methods=['GET','POST'])
-def huggingface():
+@app.route('/summary',methods=['GET','POST'])
+def summary():
     form = SummaryText()
     erreur = None
-    if request.method == 'POST':
-        summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-
-        if form.validate_on_submit(): 
-            # Define the input text
-            input_text = form.data["text"]
-
-            # Generate a summary of the input text
-            summary = summarizer(input_text, max_length=81, min_length=30, do_sample=False)
-            return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
-
-        form_pdf = PdfForm()
-        if form_pdf.validate_on_submit():
-            # Récupérer le fichier PDF
-            pdf_file = request.files['pdf_file']
-            # Define the input text
-            input_pdf = form.data["pdf"]
-            if allowed_file(input_pdf):
-                input_text = pdf_extract(pdf_file)
-                # Generate a summary of the input text
-                summary = summarizer(input_text, max_length=81, min_length=30, do_sample=False)
-                return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
-            else :
-                return render_template("formulaire.html",form=form,erreur=erreur)
-
-    return render_template("formulaire.html",form=form,erreur=erreur)
-
-
-@app.route('/modeles/hugging_face',methods=['GET','POST'])
-def huggingface():
-    form = SummaryText()
-    erreur = None
+    title = "Résumé avec differents modèles"
     if form.validate_on_submit():
-        
+        result_queue = queue.Queue()
         data = {"input_text":form.data["text"]}
-        response = requests.post("https://api-nlp-summary.onrender.com/summarize", json=data)
-        summary =  response.json()["summary"]
+        # On crée un thread pour chaque tâche de résumé
+        hugging_thread = threading.Thread(target=summarize_hugging, args=(data,result_queue))
+        azure_thread = threading.Thread(target=sample_extractive_summarization, args=(client,[form.data["text"]],result_queue))
+        # On lance les deux threads en parallèle
+        hugging_thread.start()
+        azure_thread.start()
+
+        # On attend que les deux threads aient terminé leur travail
+        hugging_thread.join()
+        azure_thread.join()
         
-        return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
-
-
-    return render_template("formulaire.html",form=form,erreur=erreur)
-
-
-
-@app.route('/modeles/azure',methods=['GET','POST'])
-def azure():
-    form = SummaryText()
-    erreur = None
-    if form.validate_on_submit():
-        client = authenticate_client()
-        summary=sample_extractive_summarization(client,[form.data["text"]])
-
-        return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
+        # On récupère tous les résultats de la queue
+        results = []
+        while not result_queue.empty():
+            result = result_queue.get()
+            results.append(result)
         
+        return render_template("formulaire.html",form=form,erreur=erreur,title=title,results=results)
 
-    return render_template("formulaire.html",form=form,erreur=erreur)
+
+    return render_template("formulaire.html",form=form,erreur=erreur,title=title)
 
 
 ######################################
