@@ -1,24 +1,16 @@
 {% extends "base.html" %}
 {% block body %}
 
-
-<form action="" method="post" class="summary_form">
-
-    <h1>{{title}}</h1>
-    {%if error%} 
-    <p>{{error}}</p>
-    {%endif%}
+<form action="" method="POST" class="summary_form" enctype="multipart/form-data">
 
     <fieldset>
-        {{form.text.label}}
-        {{form.text(required='required')}}
+        {{form_pdf.pdf.label}}
+        {{form_pdf.pdf(required='required')}}
     </fieldset>
     
     <input class="action_button" type="submit" value="Envoyer">
-    {{form.csrf_token}}
-
+    {{form_pdf.csrf_token}}
 </form>
-
 
 {% if results %}
 <section class="resumer">
