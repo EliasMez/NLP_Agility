@@ -1,22 +1,27 @@
 import os
-import threading
 import queue
 from flask import Flask, render_template, redirect, url_for, request, session
 from dotenv import load_dotenv
-
+from werkzeug.utils import secure_filename
 import requests
-
-from formulaires import SummaryText
+from formulaires import SummaryText, PdfForm
 from functions import *
+
 
 load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY']=os.getenv('SECRET_KEY')
-client = authenticate_client()
+
 ##################################
 ##            Acceuil           ## 
 ##################################
+
+ALLOWED_EXTENSIONS = {'pdf'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/")
 def accueil():
@@ -27,36 +32,44 @@ def accueil():
 ##      Modeles               ##
 ################################
 
+    
+
+
 @app.route('/summary',methods=['GET','POST'])
 def summary():
     form = SummaryText()
     erreur = None
     title = "Résumé avec differents modèles"
-    if form.validate_on_submit():
-        result_queue = queue.Queue()
-        data = {"input_text":form.data["text"]}
-        # On crée un thread pour chaque tâche de résumé
-        hugging_thread = threading.Thread(target=summarize_hugging, args=(data,result_queue))
-        azure_thread = threading.Thread(target=sample_extractive_summarization, args=(client,[form.data["text"]],result_queue))
-        # On lance les deux threads en parallèle
-        hugging_thread.start()
-        azure_thread.start()
+    result_queue = queue.Queue()
 
-        # On attend que les deux threads aient terminé leur travail
-        hugging_thread.join()
-        azure_thread.join()
-        
-        # On récupère tous les résultats de la queue
-        results = []
-        while not result_queue.empty():
-            result = result_queue.get()
-            results.append(result)
-        
+    
+    if form.validate_on_submit():
+        data = {"input_text":form.data["text"]}
+        results = get_summarization(data,result_queue)
         return render_template("formulaire.html",form=form,erreur=erreur,title=title,results=results)
 
 
     return render_template("formulaire.html",form=form,erreur=erreur,title=title)
 
+
+@app.route('/summary-pdf',methods=['GET','POST'])
+def pdf_summary():
+    title = "Résumé du pdf avec differents modèles"
+    result_queue = queue.Queue()
+    erreur = None
+    form = PdfForm()
+    if form.validate_on_submit():
+            # Récupérer le fichier PDF
+            # pdf_file = request.files['pdf_file']
+            # Define the input text
+            # return render_template(pdf_extract(pdf_file))
+            
+            data = {"input_text":pdf_extract(form.pdf.data)}
+            
+            # data = {"input_text":pdf_extract(pdf_file)}
+            results = get_summarization(data,result_queue)
+            return render_template("pdf.html",erreur=erreur,title=title,results=results,form_pdf=form)
+    return render_template("pdf.html",form_pdf=form,erreur=erreur,title=title)
 
 ######################################
 ##         error 404
