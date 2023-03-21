@@ -1,10 +1,20 @@
-<nav class="navbar">
-    <figure class="logonav">
-        <h1>Summary</h1>
-    </figure>
-    <ul class="listnav">
-       <li><a href="{{ url_for('huggingface') }}">Hugging face</a></li>
-       <li><a href="{{ url_for('azure') }}">Azure</a></li>
-       <li><a href="">Modele 3</a></li>
-    </ul>
+<nav >
+    <div class="navbar">
+        <a id="link" href="#"><span id="burger"></span></a>
+
+        <a href="{{ url_for('accueil') }}">
+        <figure class="logonav">
+            <h1>Bank Summary</h1>
+        </figure>
+        </a>
+
+        <ul class="listnav">
+        <li><a href="{{ url_for('summary') }}">Résumé un texte</a></li>
+        </ul>
+
+    </div>
+
+    <ul class="listnav close">
+        <li><a href="{{ url_for('summary') }}">Résumé un texte</a></li>
+     </ul>
 </nav>

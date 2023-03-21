@@ -1,11 +1,8 @@
 .navbar{
     background-color: $claire;
-    position: fixed;
     height: 64px;
+    position: relative;
     display: flex;
-    top: 0;
-    left: 0;
-    right: 0;
     flex-flow: row;
     justify-content:space-between;
     align-items: center;
@@ -18,11 +15,26 @@
         width: 50%;
         border-bottom: 1px solid $fonce;
     }
+    a{
+        text-decoration: none;
+    }
+    
+}
+
+#link {
+    position: absolute;
+    top: 4px;
+    left: 26px;
 }
 .logonav{
+        
+    
     h1{
+        font-size: 36px;
         margin: 0;
         color: $fonce;
+        
+        
     }
 }
 .listnav{
@@ -54,4 +66,99 @@
         }
     }
     
+}
+.close{
+    display: none;
+}
+
+@media screen and (max-width:800px) {
+    nav{
+        display: flex;
+        flex-flow: column;
+        gap: 20px;
+
+    }
+    .listnav{
+
+        justify-content: center;
+    }
+    .navbar {
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+        padding-left: 0;
+        gap: 20px;
+        #burger {
+            width: 30px;
+            height: 2px;
+            background: $fonce;
+            display: inline-block;
+            position: relative;
+            left: 2px;
+        }
+        .listnav{
+            display: none;
+        }
+
+        #burger::before,
+        #burger::after {
+            content: '';
+            width: 30px;
+            height: 2px;
+            background: $fonce;
+            display: inline-block;
+            position: absolute;
+            transform-origin: center;
+            transition: all 0.3s ease;
+        }
+
+        #burger::before {
+            top: -7px;
+        }
+
+        #burger::after {
+            top: 7px;
+        }
+
+        #burger.open {
+            background: transparent;
+            /* la barre du milieu disparait */
+        }
+
+        /* celles du haut et du bas s'inclinent pour former une croix */
+        #burger.open::before {
+            transform: rotate(45deg);
+            top: 0;
+        }
+
+        #burger.open::after {
+            transform: rotate(-45deg);
+            top: 0;
+        }
+
+       
+    }
+}
+@media screen and (max-width:500px) {
+    .logonav{
+        
+    
+        h1{
+            font-size: 24px;
+        }
+    }
+    
+}
+@media screen and (max-width:400px) {
+    .logonav{
+        
+    
+        h1{
+            font-size: 24px;
+        }
+    }
+    nav .listnav li{
+
+        font-size: 20px;
+    }
 }
