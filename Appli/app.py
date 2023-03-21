@@ -1,14 +1,14 @@
 import os
 from flask import Flask, render_template, redirect, url_for, request, session
 from dotenv import load_dotenv
-from transformers import pipeline
 from werkzeug.utils import secure_filename
+import requests
+from transformers import pipeline
 from formulaires import SummaryText, PdfForm
 from functions import *
 from PDF_extract import pdf_extract
 
 load_dotenv()
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY']=os.getenv('SECRET_KEY')
@@ -23,7 +23,6 @@ def allowed_file(filename):
 ##            Acceuil           ## 
 ##################################
 
-
 @app.route("/")
 def accueil():
     return render_template("index.html")
@@ -32,6 +31,7 @@ def accueil():
 #################################
 ##      Modeles               ##
 ################################
+
 
 @app.route('/modeles/hugging_face',methods=['GET','POST'])
 def huggingface():
@@ -61,6 +61,22 @@ def huggingface():
                 return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
             else :
                 return render_template("formulaire.html",form=form,erreur=erreur)
+
+    return render_template("formulaire.html",form=form,erreur=erreur)
+
+
+@app.route('/modeles/hugging_face',methods=['GET','POST'])
+def huggingface():
+    form = SummaryText()
+    erreur = None
+    if form.validate_on_submit():
+        
+        data = {"input_text":form.data["text"]}
+        response = requests.post("https://api-nlp-summary.onrender.com/summarize", json=data)
+        summary =  response.json()["summary"]
+        
+        return render_template("formulaire.html",form=form,erreur=erreur,summary = summary)
+
 
     return render_template("formulaire.html",form=form,erreur=erreur)
 
