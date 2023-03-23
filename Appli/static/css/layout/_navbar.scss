@@ -71,6 +71,20 @@
     display: none;
 }
 
+@media screen and (max-width:1064px) {
+    nav .listnav li{
+
+        font-size: 16px;
+    }
+    .logonav{
+        
+    
+        h1{
+            font-size: 24px;
+        }
+    }
+}
+
 @media screen and (max-width:800px) {
     nav{
         display: flex;
@@ -81,6 +95,7 @@
     .listnav{
 
         justify-content: center;
+        flex-flow: column;
     }
     .navbar {
         flex-flow: column;
