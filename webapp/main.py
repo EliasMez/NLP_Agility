@@ -2,8 +2,9 @@ from transformers import pipeline
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
 
-generator = pipeline('text-generation', model='gpt2')
 
+# model_name = "human-centered-summarization/financial-summarization-pegasus"
+generator = pipeline("summarization", model="facebook/bart-large-cnn")
 app = FastAPI()
 
 
@@ -18,5 +19,5 @@ def root():
 
 @app.post('/generate')
 def predict(body: Body):
-    results = generator(body.text, max_length=35, num_return_sequences=1)
+    results = generator(body.text)
     return results[0]

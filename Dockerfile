@@ -8,7 +8,7 @@ RUN pip install -r requirements.txt
 
 COPY webapp/* /webapp
 
-EXPOSE 8000
+EXPOSE 8001
 
 ENTRYPOINT [ "uvicorn" ]
 

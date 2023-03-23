@@ -4,14 +4,15 @@ env:
   AZURE_CONTAINER_APP_NAME: demo-container
   AZURE_GROUP_NAME: demo-container
 
-# When this action will be executed
+When this action will be executed
 on:
-  # Automatically trigger it when detected changes in repo. Remove comments to enable
-  #push:
-  #  branches: 
-  #    [ main ]
+   Automatically trigger it when detected changes in repo. Remove comments to enable
+  push:
+    branches: 
+     [ main ]
+     [NLP-77-deployer-api-modele-hugging-face]
 
-  # Allow mannually trigger 
+  Allow mannually trigger 
   workflow_dispatch:      
 
 jobs:
