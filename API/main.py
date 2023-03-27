@@ -24,9 +24,9 @@ async def summarize(input_text: Request):
     # # Combine the cluster summaries into a final summary
     # final_summary = ' '.join(cluster_summaries)
     max_input_length = 1024
-    input_text = input_text[:max_input_length]
+    input_text = text_to_summarize[:max_input_length]
     # Generate a summary of the input text
-    summary = text_to_summarize(input_text, do_sample=True)
+    summary = summarizer(input_text, do_sample=True)
     return {"summary":str(summary[0]['summary_text'])}
 
 # uvicorn main:app --reload --port 8001
