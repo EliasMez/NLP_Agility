@@ -15,14 +15,18 @@ class Request(BaseModel):
 async def summarize(input_text: Request):
     text_to_summarize = input_text.dict()["input_text"]
     
-    sentences = text_to_summarize.split(".")
-    # Group the sentences into clusters of 3
-    clusters = [sentences[i:i+3] for i in range(0, len(sentences), 3)]
-    # Generate a summary for each cluster
-    cluster_summaries = [summarizer(' '.join(cluster), do_sample=False)[0]['summary_text'] for cluster in clusters]
+    # sentences = text_to_summarize.split(".")
+    # # Group the sentences into clusters of 3
+    # clusters = [sentences[i:i+3] for i in range(0, len(sentences), 3)]
+    # # Generate a summary for each cluster
+    # cluster_summaries = [summarizer(' '.join(cluster), do_sample=False)[0]['summary_text'] for cluster in clusters]
 
-    # Combine the cluster summaries into a final summary
-    final_summary = ' '.join(cluster_summaries)
-    return {"summary":str(final_summary)}
+    # # Combine the cluster summaries into a final summary
+    # final_summary = ' '.join(cluster_summaries)
+    max_input_length = 1024
+    input_text = input_text[:max_input_length]
+    # Generate a summary of the input text
+    summary = text_to_summarize(input_text, do_sample=True)
+    return {"summary":str(summary[0]['summary_text'])}
 
 # uvicorn main:app --reload --port 8001
