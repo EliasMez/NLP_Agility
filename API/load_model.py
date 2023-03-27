@@ -1,4 +1,4 @@
 from transformers import pipeline
 
-model_name = "human-centered-summarization/financial-summarization-pegasus"
+model_name = "facebook/bart-large-cnn"
 summarizer = pipeline("summarization",model=model_name)
