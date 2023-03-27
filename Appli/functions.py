@@ -42,9 +42,9 @@ def sample_extractive_summarization(client,document,result_queue):
             result_queue.put(result_tuple)
 
 def summarize_hugging(data,result_queue):
-    response = requests.post("http://0.0.0.0:8080/summarize", json=data)
+    response = requests.post("http://api-summary.esbmczgjaqhjhyfh.francecentral.azurecontainer.io/summarize", json=data)
     summary_hugging = response.json()["summary"]
-    result_tuple = ("Hugging" ,summary_hugging)
+    result_tuple = ("Hugging Face (facebook/bart-large-cnn)" ,summary_hugging)
     result_queue.put(result_tuple)
 
     
